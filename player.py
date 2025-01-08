@@ -44,3 +44,15 @@ class Player(CircleShape):
 
         self.rect.center = self.position
         self.draw()
+          # Wrap around the screen
+            # Horizontal wrapping
+        if self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+        elif self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+
+        # Vertical wrapping
+        if self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0
+        elif self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
