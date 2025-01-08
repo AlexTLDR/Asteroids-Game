@@ -2,25 +2,35 @@ import pygame
 from circleshape import CircleShape
 from constants import *
 
-class Player(CircleShape):
+class Player(CircleShape, pygame.sprite.Sprite):
     def __init__(self, x, y):
-        super().__init__(x, y, PLAYER_RADIUS)
+        CircleShape.__init__(self, x, y, PLAYER_RADIUS)
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((PLAYER_RADIUS * 2, PLAYER_RADIUS * 2), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
         self.rotation = 0
 
-    # in the player class
     def triangle(self):
+        center = pygame.Vector2(self.radius, self.radius)
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
+        a = center + forward * self.radius
+        b = center - forward * self.radius - right
+        c = center - forward * self.radius + right
         return [a, b, c]
 
-    def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+    def draw(self):
+        self.image.fill((0,0,0,0))
+        pygame.draw.polygon(self.image, "white", self.triangle(), 2)
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
+
+    def move(self, dt):
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        self.position += forward * PLAYER_SPEED * dt
+
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
@@ -29,3 +39,10 @@ class Player(CircleShape):
             self.rotate(-dt)
         if keys[pygame.K_d]:
             self.rotate(dt)
+        if keys[pygame.K_w]:
+            self.move(dt)
+        if keys[pygame.K_s]:
+            self.move(-dt)
+
+        self.rect.center = self.position
+        self.draw()
