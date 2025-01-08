@@ -2,11 +2,9 @@ import pygame
 from circleshape import CircleShape
 from constants import *
 
-class Player(CircleShape, pygame.sprite.Sprite):
+class Player(CircleShape):
     def __init__(self, x, y):
         CircleShape.__init__(self, x, y, PLAYER_RADIUS)
-        pygame.sprite.Sprite.__init__(self)
-
         self.image = pygame.Surface((PLAYER_RADIUS * 2, PLAYER_RADIUS * 2), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.rotation = 0
